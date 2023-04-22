@@ -111,6 +111,28 @@ func (gobgp *GoBGP) parsePathIntoRoute(
 		case *bgp.PathAttributeNextHop:
 			route.Gateway = attr.Value.String()
 			route.BGP.NextHop = attr.Value.String()
+		case *bgp.PathAttributeMpReachNLRI:
+			route.Gateway = attr.Nexthop.String()
+			route.BGP.NextHop = attr.Nexthop.String()
+			for _, v := range attr.Value {
+				switch n := v.(type) {
+				case *bgp.EVPNNLRI:
+					switch evpnRoute := n.RouteTypeData.(type) {
+					case *bgp.EVPNEthernetAutoDiscoveryRoute:
+						//label = fmt.Sprintf("[%d]", route.Label)
+					case *bgp.EVPNMacIPAdvertisementRoute:
+						//ls := make([]string, len(route.Labels))
+						//for i, l := range route.Labels {
+						//	ls[i] = strconv.Itoa(int(l))
+						//}
+						//label = fmt.Sprintf("[%s]", strings.Join(ls, ","))
+					case *bgp.EVPNIPPrefixRoute:
+						route.Network = fmt.Sprintf("%s/%d", evpnRoute.IPPrefix, evpnRoute.IPPrefixLength)
+						route.Interface = fmt.Sprintf("VNI %d", evpnRoute.Label)
+					}
+				}
+			}
+
 		case *bgp.PathAttributeLocalPref:
 			route.BGP.LocalPref = int(attr.Value)
 		case *bgp.PathAttributeOrigin:

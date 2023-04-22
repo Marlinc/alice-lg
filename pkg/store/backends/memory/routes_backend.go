@@ -93,7 +93,7 @@ func (r *RoutesBackend) FindByPrefix(
 	r.routes.Range(func(k, rs interface{}) bool {
 		for _, route := range rs.(api.LookupRoutes) {
 			// Naiive string filtering:
-			if strings.HasPrefix(strings.ToLower(route.Network), prefix) {
+			if strings.Contains(strings.ToLower(route.Network), prefix) {
 				result = append(result, route)
 			}
 		}
