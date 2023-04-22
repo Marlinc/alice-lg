@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	gobgpapi "github.com/osrg/gobgp/api"
-	"github.com/osrg/gobgp/pkg/packet/bgp"
+	gobgpapi "github.com/osrg/gobgp/v3/api"
+	"github.com/osrg/gobgp/v3/pkg/packet/bgp"
 
 	"github.com/alice-lg/alice-lg/pkg/api"
 	"github.com/alice-lg/alice-lg/pkg/sources/gobgp/apiutil"
@@ -20,6 +20,9 @@ var families []gobgpapi.Family = []gobgpapi.Family{{
 }, {
 	Afi:  gobgpapi.Family_AFI_IP6,
 	Safi: gobgpapi.Family_SAFI_UNICAST,
+}, {
+	Afi:  gobgpapi.Family_AFI_L2VPN,
+	Safi: gobgpapi.Family_SAFI_EVPN,
 },
 }
 
